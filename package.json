@@ -1,0 +1,11 @@
+{
+  "name": "lokwish",
+  "version": "1.0.0",
+  "description": "LoKWish Adventure Game Engine",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alaric von Teplitz",
+  "license": "MIT"
+}
