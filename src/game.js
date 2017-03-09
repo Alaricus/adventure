@@ -12,23 +12,18 @@
     let pf;
 
     window.addEventListener("sceneloaded", () => {
-        ctx.canvas.width = sc.background.width;
-        ctx.canvas.height = sc.background.height;
+        canvas.width = sc.background.width;
+        canvas.height = sc.background.height;
         pf = new Pathfinding(sc);
-        ch = new Character(sc);        
+        ch = new Character(sc);
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("debug").style.display = "block";        
     }, false);
 
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     
     let mouseData = { x: -1, y: -1 };
-
-    // These must set to false when the page is loaded
-    // Otherwise pf is not ready yet and will error out
-    document.getElementById("pathLine").checked = false;
-    document.getElementById("pathNodes").checked = false;
-    document.getElementById("walkArea").checked = false;
-    document.getElementById("foreground").checked = false;
 
     canvas.addEventListener("mousemove", (e) => {
         mouseData = getMouseData(canvas, e);
@@ -65,27 +60,27 @@
     };
 
     const main = () => {
-        if (ch !== undefined && ch.hasOwnProperty("x")) {
+        if (ch !== undefined && pf !== undefined) {
             update();
             draw();
-        }        
+        }
         requestAnimationFrame(main);
     };
 
     const update = () => {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ch.adjustSize();
         ch.adjustSpeed();
         if (ch.way !== null && ch.way.length > 0) ch.move();
     };
 
     const draw = () => {
-        ctx.drawImage(sc.background, 0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.drawImage(sc.background, 0, 0, canvas.width, canvas.height);
         if (ch.isBehind()) {
             ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
-            ctx.drawImage(sc.foreground, 0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.drawImage(sc.foreground, 0, 0, canvas.width, canvas.height);
         } else {
-            ctx.drawImage(sc.foreground, 0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.drawImage(sc.foreground, 0, 0, canvas.width, canvas.height);
             ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
         }
 

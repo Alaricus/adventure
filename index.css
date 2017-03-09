@@ -1,0 +1,13 @@
+body {
+    text-align: center;
+}
+
+#loading {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#debug{
+    display: none;
+}

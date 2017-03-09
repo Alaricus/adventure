@@ -3,17 +3,21 @@
     <head>
         <meta charset="UTF-8">
         <title>LoKWish Adventure Game Engine</title>
+        <link href="index.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <canvas id="game"></canvas>
+        <div id="loading"><img src="./assets/engine/loading.gif"><br>Loading Scene Assets</div>
         <br>
-        <input type="checkbox" id="walkArea"> Show walkable area
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="checkbox" id="pathNodes"> Show path nodes
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="checkbox" id="pathLine"> Show path line
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="checkbox" id="foreground"> Show foreground images
+        <div id="debug">
+            <input type="checkbox" id="walkArea"> Show walkable area
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" id="pathNodes"> Show path nodes
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" id="pathLine"> Show path line
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" id="foreground"> Show foreground images
+        </div>
         <script src="./src/game.js"></script>
     </body>
 </html>
