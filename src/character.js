@@ -2,7 +2,7 @@ class character {
 
     constructor(scene) {
         this.x = 430;
-        this.y = 655;
+        this.y = 555; //655;
         this.way = null;
         this.speed = null;   
         this.size = 1;
@@ -25,8 +25,6 @@ class character {
         let factor = distance / this.speed;
         this.x += (distX / factor);
         this.y += (distY / factor);
-        this.h = this.ph * this.size;
-        this.w = this.pw * this.size;
 
         if (distance < this.speed) {
             this.x = destinationX;
@@ -42,6 +40,8 @@ class character {
 
     adjustSize() {
         this.size = (this.y / this.sc.background.height + 1) / 2;
+        this.h = this.ph * this.size;
+        this.w = this.pw * this.size;
     }
 
     isBehind() {

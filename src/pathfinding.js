@@ -148,7 +148,7 @@ class pathfinding {
         }    
     }
 
-    // Dijkstar's algorythm. Not Sigismund Dijkstra
+    // Dijkstra's algorithm. Not Sigismund Dijkstra
     dijkstra() {
         const nodes = this.pathNodes; // array of nodes: {x: 4, y: 8}
         const edges = this.validPaths; // array of edges: {a: 0, b: 1, d: 428}

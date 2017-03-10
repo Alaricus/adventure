@@ -1,12 +1,12 @@
 "use strict";
 
-(function () {  
+(function () {
 
     const Scene = require("./scene");
     const Pathfinding = require("./pathfinding");
     const Character = require("./character");
     
-    const sc = new Scene(0);
+    let sc = new Scene(0);
     let ch;
     let pf;
 
@@ -49,6 +49,14 @@
             pf.validPaths = [];
         }
     }, false);
+
+    document.getElementById("newScene").addEventListener("click", () => {
+        canvas.width = 0;
+        canvas.height = 0;
+        document.getElementById("loading").style.display = "block";
+        document.getElementById("debug").style.display = "none";     
+        sc = new Scene(1);
+    });
 
     const getMouseData = (canv, e) => {
         let rect = canv.getBoundingClientRect();
