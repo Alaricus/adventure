@@ -10,7 +10,6 @@ class character {
         this.pw = 95;
         this.h = this.ph * this.size;
         this.w = this.pw * this.size;   
-        this.sc = scene;
     }
 
     move() {         
@@ -34,24 +33,19 @@ class character {
         if (this.x === destinationX && this.y === destinationY) this.way.shift();
     }
 
-    adjustSpeed() {
-        this.speed = (this.y / this.sc.background.height + 1) / 0.75;
+    adjustSpeed(sceneHeight) {
+        this.speed = (this.y / sceneHeight + 1) / 0.75;
     }
 
-    adjustSize() {
-        this.size = (this.y / this.sc.background.height + 1) / 2;
+    adjustSize(sceneHeight) {
+        this.size = (this.y / sceneHeight + 1) / 2;
         this.h = this.ph * this.size;
         this.w = this.pw * this.size;
     }
 
-    isBehind() {
-        for (let i = 0; i < this.sc.topImageCoords.length; i++) {
-            if ((this.x > this.sc.topImageCoords[i].x - this.w / 2 
-            && this.x < this.sc.topImageCoords[i].x + this.sc.topImageCoords[i].w + this.w / 2) 
-            && (this.y > this.sc.topImageCoords[i].y 
-            && this.y < this.sc.topImageCoords[i].y + this.sc.topImageCoords[i].h )) {
-                return true;
-            }
+    isBehind(x, y, w, h) {
+        if ((this.x > x - this.w / 2 && this.x < x + w + this.w / 2) && (this.y > y && this.y < y + h )) {
+            return true;
         }
         return false;
     }

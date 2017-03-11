@@ -14,7 +14,7 @@
         canvas.width = sc.background.width;
         canvas.height = sc.background.height;
         pf = new Pathfinding(sc);
-        ch = new Character(sc);
+        ch = new Character();
         document.getElementById("loading").style.display = "none";
         document.getElementById("debug").style.display = "block";        
     }, false);
@@ -79,20 +79,30 @@
 
     const update = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ch.adjustSize();
-        ch.adjustSpeed();
+        ch.adjustSize(sc.background.height);
+        ch.adjustSpeed(sc.background.height);
         if (ch.way !== null && ch.way.length > 0) ch.move();
     };
 
     const draw = () => {
         ctx.drawImage(sc.background, 0, 0, canvas.width, canvas.height);
-        if (ch.isBehind()) {
-            ctx.drawImage(sc.character0, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
-            ctx.drawImage(sc.foreground, 0, 0, canvas.width, canvas.height);
-        } else {
-            ctx.drawImage(sc.foreground, 0, 0, canvas.width, canvas.height);
-            ctx.drawImage(sc.character0, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
-        }
+        sc.sceneData.foregrounds.forEach((foreground, index) => {
+            const f = sc[foreground];
+            const x = sc.sceneData.topAreas[index].x;
+            const y = sc.sceneData.topAreas[index].y;
+            const w = sc.sceneData.topAreas[index].w;
+            const h = sc.sceneData.topAreas[index].h;
+            if (!ch.isBehind(x, y, w, h)) ctx.drawImage(f, x, y, w, h);
+        });
+        ctx.drawImage(sc.character0, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+        sc.sceneData.foregrounds.forEach((foreground, index) => {
+            const f = sc[foreground];
+            const x = sc.sceneData.topAreas[index].x;
+            const y = sc.sceneData.topAreas[index].y;
+            const w = sc.sceneData.topAreas[index].w;
+            const h = sc.sceneData.topAreas[index].h;
+            if (ch.isBehind(x, y, w, h)) ctx.drawImage(f, x, y, w, h);
+        });
 
         /****************************************/
         /*           Debugging Stuff            */

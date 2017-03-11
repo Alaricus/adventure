@@ -7,12 +7,16 @@ class scene {
     async initialize(sceneNum) {
         await this.getSceneData(sceneNum);
 
-        this.getWalkable(sceneNum);
+        await this.getWalkable(sceneNum);
         this.topImageCoords = this.sceneData.topAreas;
 
-        for (let image in this.sceneData.images) {
+        this.sceneData.backgrounds.forEach((image) => {
             this.getImage(image, sceneNum);
-        }        
+        });
+
+        this.sceneData.foregrounds.forEach((image) => {
+            this.getImage(image, sceneNum);
+        });  
 
         this.sceneData.characters.forEach((char) => {
             this.getImage(char, null)
@@ -49,7 +53,7 @@ class scene {
         try {
             let url;
             if (num !== null) {
-                url = `./assets/scene${num}/${this.sceneData.images[img]}`;
+                url = `./assets/scene${num}/${img}.png`;
             } else {
                 url = `./assets/character${img}/character.png`;
                 img = `character${img}`;
