@@ -46,7 +46,7 @@ class character {
 
     isBehind() {
         for (let i = 0; i < this.sc.topImageCoords.length; i++) {
-            if ((this.x > this.sc.topImageCoords[i].x-this.w / 2 
+            if ((this.x > this.sc.topImageCoords[i].x - this.w / 2 
             && this.x < this.sc.topImageCoords[i].x + this.sc.topImageCoords[i].w + this.w / 2) 
             && (this.y > this.sc.topImageCoords[i].y 
             && this.y < this.sc.topImageCoords[i].y + this.sc.topImageCoords[i].h )) {

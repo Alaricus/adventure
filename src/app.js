@@ -51,11 +51,14 @@
     }, false);
 
     document.getElementById("newScene").addEventListener("click", () => {
+        ch = undefined;
+        pf = undefined;
         canvas.width = 0;
         canvas.height = 0;
         document.getElementById("loading").style.display = "block";
-        document.getElementById("debug").style.display = "none";     
-        sc = new Scene(1);
+        document.getElementById("debug").style.display = "none";
+
+        (sc.sceneData.name === "Scene One") ? sc = new Scene(1) : sc = new Scene(0);
     });
 
     const getMouseData = (canv, e) => {
@@ -84,11 +87,11 @@
     const draw = () => {
         ctx.drawImage(sc.background, 0, 0, canvas.width, canvas.height);
         if (ch.isBehind()) {
-            ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+            ctx.drawImage(sc.character0, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
             ctx.drawImage(sc.foreground, 0, 0, canvas.width, canvas.height);
         } else {
             ctx.drawImage(sc.foreground, 0, 0, canvas.width, canvas.height);
-            ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+            ctx.drawImage(sc.character0, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
         }
 
         /****************************************/
