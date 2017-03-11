@@ -7,7 +7,14 @@
     </head>
     <body>
         <canvas id="game"></canvas>
-        <div id="loading"><img src="./assets/engine/loading.gif"><br>Loading Scene Assets</div>
+        <div id="loading">
+            <img src="./assets/engine/loading.gif">
+            <h2>Loading Scene Assets</h2>
+            <h3>Please update your browser: This engine only works with <a href="https://www.google.com/chrome/">Chrome 55+</a> and <a href="www.getfirefox.com">Firefox 52+</a> browsers.</h3>
+            Latest Chromium-based browsers such as Opera and Vivaldi support it as well.
+            <br>Safari will support it as of 10.1+, Edge preview version 39.14986 works too.
+            <br><br>(For the technically inclined: The above is due to the use of async/await.)
+        </div>
         <br>
         <div id="debug">
             <input type="checkbox" id="walkArea"> Show walkable area
@@ -18,7 +25,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input type="checkbox" id="foreground"> Show foreground images
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button id="newScene" type="button">Load Another Scene</button>
+            <button id="newScene" type="button">Switch Scene</button>
         </div>
         <script src="./src/game.js"></script>
     </body>

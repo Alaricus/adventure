@@ -3,3 +3,4 @@
 /assets/character1/*
 /node_modules/*
 /src/game.js
+/**/*.psd
