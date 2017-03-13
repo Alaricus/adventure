@@ -1,6 +1,4 @@
 /tools/*
-/assets/scene1/*
-/assets/character1/*
 /node_modules/*
 /src/game.js
 /**/*.psd

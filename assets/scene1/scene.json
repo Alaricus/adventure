@@ -1,5 +1,5 @@
 {
-    "name": "Cliff Daytime",
+    "name": "Cliff Nighttime",
     "background": {"sx": 0, "sy": 0, "sw": 1024, "sh": 576},
     "foregrounds": [        
         {"frames": 1, "px": 108, "py": 391, "pw": 233, "ph": 110, "sx": 0, "sy": 577, "sw": 233, "sh": 110},

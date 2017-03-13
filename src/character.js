@@ -1,6 +1,6 @@
 class character {
 
-    constructor(scene) {
+    constructor() {
         this.x = 430;
         this.y = 555; //655;
         this.way = null;

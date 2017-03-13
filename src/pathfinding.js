@@ -3,7 +3,7 @@ class pathfinding {
     constructor(scene) {
         this.pathNodes = [];
         this.validPaths = [];
-        this.allPolygons = scene.walkableAreaJSON.polygons;
+        this.allPolygons = scene.data.walkableAreas.polygons;
         this.buildListOfConcavePoints(this.allPolygons);
     }
 

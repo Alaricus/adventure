@@ -5,24 +5,23 @@
     const Scene = require("./scene");
     const Pathfinding = require("./pathfinding");
     const Character = require("./character");
+
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
     
+    let mouseData = { x: -1, y: -1 };    
     let sc = new Scene(0);
     let ch;
     let pf;
 
     window.addEventListener("sceneloaded", () => {
-        canvas.width = sc.background.width;
-        canvas.height = sc.background.height;
+        canvas.width = sc.data.background.sw;
+        canvas.height = sc.data.background.sh;
         pf = new Pathfinding(sc);
         ch = new Character();
         document.getElementById("loading").style.display = "none";
         document.getElementById("debug").style.display = "block";        
     }, false);
-
-    const canvas = document.getElementById("game");
-    const ctx = canvas.getContext("2d");
-    
-    let mouseData = { x: -1, y: -1 };
 
     canvas.addEventListener("mousemove", (e) => {
         mouseData = getMouseData(canvas, e);
@@ -58,7 +57,7 @@
         document.getElementById("loading").style.display = "block";
         document.getElementById("debug").style.display = "none";
 
-        (sc.sceneData.name === "Scene One") ? sc = new Scene(1) : sc = new Scene(0);
+        (sc.data.name === "Cliff Daytime") ? sc = new Scene(1) : sc = new Scene(0);
     });
 
     const getMouseData = (canv, e) => {
@@ -79,29 +78,38 @@
 
     const update = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ch.adjustSize(sc.background.height);
-        ch.adjustSpeed(sc.background.height);
+        ch.adjustSize(sc.data.background.sh);
+        ch.adjustSpeed(sc.data.background.sh);
         if (ch.way !== null && ch.way.length > 0) ch.move();
     };
 
     const draw = () => {
-        ctx.drawImage(sc.background, 0, 0, canvas.width, canvas.height);
-        sc.sceneData.foregrounds.forEach((foreground, index) => {
-            const f = sc[foreground];
-            const x = sc.sceneData.topAreas[index].x;
-            const y = sc.sceneData.topAreas[index].y;
-            const w = sc.sceneData.topAreas[index].w;
-            const h = sc.sceneData.topAreas[index].h;
-            if (!ch.isBehind(x, y, w, h)) ctx.drawImage(f, x, y, w, h);
+        ctx.drawImage(sc.sprite, sc.data.background.sx, sc.data.background.sy, sc.data.background.sw, sc.data.background.sh, sc.data.background.sx, sc.data.background.sy, sc.data.background.sw, sc.data.background.sh);
+        
+        sc.data.foregrounds.forEach((foreground, index) => {
+            const sx = sc.data.foregrounds[index].sx;
+            const sy = sc.data.foregrounds[index].sy;
+            const sw = sc.data.foregrounds[index].sw;
+            const sh = sc.data.foregrounds[index].sh;
+            const px = sc.data.foregrounds[index].px;
+            const py = sc.data.foregrounds[index].py;
+            const pw = sc.data.foregrounds[index].pw;
+            const ph = sc.data.foregrounds[index].ph;
+            if (!ch.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
         });
-        ctx.drawImage(sc.character0, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
-        sc.sceneData.foregrounds.forEach((foreground, index) => {
-            const f = sc[foreground];
-            const x = sc.sceneData.topAreas[index].x;
-            const y = sc.sceneData.topAreas[index].y;
-            const w = sc.sceneData.topAreas[index].w;
-            const h = sc.sceneData.topAreas[index].h;
-            if (ch.isBehind(x, y, w, h)) ctx.drawImage(f, x, y, w, h);
+
+        ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+        
+        sc.data.foregrounds.forEach((foreground, index) => {
+            const sx = sc.data.foregrounds[index].sx;
+            const sy = sc.data.foregrounds[index].sy;
+            const sw = sc.data.foregrounds[index].sw;
+            const sh = sc.data.foregrounds[index].sh;
+            const px = sc.data.foregrounds[index].px;
+            const py = sc.data.foregrounds[index].py;
+            const pw = sc.data.foregrounds[index].pw;
+            const ph = sc.data.foregrounds[index].ph;
+            if (ch.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
         });
 
         /****************************************/
@@ -110,9 +118,9 @@
 
         // Draw foreground image areas
         if (document.getElementById("foreground").checked) {
-            for (let i = 0; i < sc.topImageCoords.length; i++) {
+            for (let i = 0; i < sc.data.foregrounds.length; i++) {
                 ctx.strokeStyle = "#ff471a";
-                ctx.strokeRect(sc.topImageCoords[i].x, sc.topImageCoords[i].y, sc.topImageCoords[i].w, sc.topImageCoords[i].h);
+                ctx.strokeRect(sc.data.foregrounds[i].px, sc.data.foregrounds[i].py, sc.data.foregrounds[i].pw, sc.data.foregrounds[i].ph);
                 ctx.strokeStyle = "#000000";
             }
         }

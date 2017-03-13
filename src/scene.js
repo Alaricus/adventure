@@ -5,47 +5,28 @@ class scene {
     }
 
     async initialize(sceneNum) {
-        await this.getSceneData(sceneNum);
+        await this.getData(sceneNum);
 
-        await this.getWalkable(sceneNum);
-        this.topImageCoords = this.sceneData.topAreas;
-
-        this.sceneData.backgrounds.forEach((image) => {
-            this.getImage(image, sceneNum);
-        });
-
-        this.sceneData.foregrounds.forEach((image) => {
-            this.getImage(image, sceneNum);
-        });  
-
-        this.sceneData.characters.forEach((char) => {
+        await this.data.characters.forEach((char) => {
             this.getImage(char, null)
         });
+
+        await this.getImage("sprite", sceneNum);
         
-        // This is a hack because I know that background is the largest asset (right now)
+        // This is a hack because I know that the sprite sheet is the largest asset (right now)
         // TODO: Make sure the event fires when everything is loaded
-        this.background.onload = () => {
-            // This event will fire after the promise is fulfilled and we get the data
+        this.sprite.onload = () => {
             let doneLoading = new Event("sceneloaded");
             window.dispatchEvent(doneLoading);
         };
     }
 
-    async getSceneData(num) {
+    async getData(num) {
         try {
             let response = await fetch(`./assets/scene${num}/scene.json`);
-            this.sceneData = await response.json();
+            this.data = await response.json();
         } catch(err) {
             console.log(`Error loading scene${num} data.`)
-        } 
-    }
-
-    async getWalkable(num) {
-        try {
-            let response = await fetch(`./assets/scene${num}/walkable.json`);
-            this.walkableAreaJSON = await response.json();
-        } catch(err) {
-            console.log(`Error loading scene${num} walkable areas.`)
         } 
     }
 
@@ -56,7 +37,7 @@ class scene {
                 url = `./assets/scene${num}/${img}.png`;
             } else {
                 url = `./assets/character${img}/character.png`;
-                img = `character${img}`;
+                img = `character`;
             }
             this[img] = new Image();
             let response = await fetch(url);
