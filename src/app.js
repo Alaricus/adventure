@@ -76,11 +76,31 @@
         requestAnimationFrame(main);
     };
 
+// TODO: This needs to be somewhere else, so each animation has it's own
+let frameIndex = 0;
+let totalFrames = 2;
+let ticksPerFrame = 5;
+let tickCount = 0;
+
     const update = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ch.adjustSize(sc.data.background.sh);
         ch.adjustSpeed(sc.data.background.sh);
-        if (ch.way !== null && ch.way.length > 0) ch.move();
+        if (ch.way !== null && ch.way.length > 0) {
+            ch.move();
+
+            // TODO: This needs to be somewhere else, so each animation has it's own          
+            tickCount += 1;                
+            if (tickCount > ticksPerFrame) {        
+                tickCount = 0;        	
+                frameIndex += 1; 
+            }
+            if (frameIndex > 2) frameIndex = 1;
+
+        // TODO: This needs to be somewhere else, so each animation has it's own
+        } else {
+            frameIndex = 1;
+        }
     };
 
     const draw = () => {
@@ -98,7 +118,24 @@
             if (!ch.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
         });
 
-        ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+        // animate the character
+        switch (ch.direction) {
+            case 0:
+                ctx.drawImage(sc.character, 0 + frameIndex*32, 129, 32, 32, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+                break;
+            case 1:
+                ctx.drawImage(sc.character, 0 + frameIndex*32, 161, 32, 32, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+                break;
+            case 2:
+                ctx.drawImage(sc.character, 0 + frameIndex*32, 193, 32, 32, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+                break;
+            case 3:
+                ctx.drawImage(sc.character, 0 + frameIndex*32, 225, 32, 32, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+                break;
+        }
+        
+        // Drawing a non-animated character
+        // ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
         
         sc.data.foregrounds.forEach((foreground, index) => {
             const sx = sc.data.foregrounds[index].sx;
