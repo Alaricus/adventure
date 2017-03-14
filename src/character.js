@@ -1,6 +1,7 @@
 class character {
 
-    constructor() {
+    constructor(sc) {
+        this.sc = sc;
         this.x = 430;
         this.y = 555;
         this.way = null;
@@ -10,7 +11,43 @@ class character {
         this.pw = 48;
         this.h = this.ph * this.size;
         this.w = this.pw * this.size; 
-        this.direction = 0;  
+        this.direction = 0;
+
+        this.frameIndex = 0;
+        this.totalFrames = 2;
+        this.ticksPerFrame = 5;
+        this.tickCount = 0;
+    }
+
+    update() {
+        if (this.way !== null && this.way.length > 0) {
+            this.move();        
+            this.tickCount += 1;                
+            if (this.tickCount > this.ticksPerFrame) {        
+                this.tickCount = 0;        	
+                this.frameIndex += 1; 
+            }
+            if (this.frameIndex > 2) this.frameIndex = 1;
+        } else {
+            this.frameIndex = 1;
+        }
+
+        // Create an array that duplicates the sequence of parameters in ctx.drawImage for sprite animation
+        // TODO: Deal with the magic numbers (create a character manifesto)
+        switch (this.direction) {
+            case 0:
+                this.animationFrame = [this.sc.character, 0 + this.frameIndex*32, 129, 32, 32, this.x-this.w/2, this.y-this.h, this.w, this.h];
+                break;
+            case 1:
+                this.animationFrame = [this.sc.character, 0 + this.frameIndex*32, 161, 32, 32, this.x-this.w/2, this.y-this.h, this.w, this.h];
+                break;
+            case 2:
+                this.animationFrame = [this.sc.character, 0 + this.frameIndex*32, 193, 32, 32, this.x-this.w/2, this.y-this.h, this.w, this.h];
+                break;
+            case 3:
+                this.animationFrame = [this.sc.character, 0 + this.frameIndex*32, 225, 32, 32, this.x-this.w/2, this.y-this.h, this.w, this.h];
+                break;
+        }
     }
 
     move() {         

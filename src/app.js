@@ -18,7 +18,7 @@
         canvas.width = sc.data.background.sw;
         canvas.height = sc.data.background.sh;
         pf = new Pathfinding(sc);
-        ch = new Character();
+        ch = new Character(sc);
         document.getElementById("loading").style.display = "none";
         document.getElementById("debug").style.display = "block";        
     }, false);
@@ -76,31 +76,16 @@
         requestAnimationFrame(main);
     };
 
-// TODO: This needs to be somewhere else, so each animation has it's own
-let frameIndex = 0;
-let totalFrames = 2;
-let ticksPerFrame = 5;
-let tickCount = 0;
+
 
     const update = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // TODO: Redo these at some point to not have y-based calculations (try alpha-maps maybe)
         ch.adjustSize(sc.data.background.sh);
         ch.adjustSpeed(sc.data.background.sh);
-        if (ch.way !== null && ch.way.length > 0) {
-            ch.move();
-
-            // TODO: This needs to be somewhere else, so each animation has it's own          
-            tickCount += 1;                
-            if (tickCount > ticksPerFrame) {        
-                tickCount = 0;        	
-                frameIndex += 1; 
-            }
-            if (frameIndex > 2) frameIndex = 1;
-
-        // TODO: This needs to be somewhere else, so each animation has it's own
-        } else {
-            frameIndex = 1;
-        }
+        
+        ch.update();
     };
 
     const draw = () => {
@@ -118,21 +103,9 @@ let tickCount = 0;
             if (!ch.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
         });
 
-        // animate the character
-        switch (ch.direction) {
-            case 0:
-                ctx.drawImage(sc.character, 0 + frameIndex*32, 129, 32, 32, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
-                break;
-            case 1:
-                ctx.drawImage(sc.character, 0 + frameIndex*32, 161, 32, 32, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
-                break;
-            case 2:
-                ctx.drawImage(sc.character, 0 + frameIndex*32, 193, 32, 32, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
-                break;
-            case 3:
-                ctx.drawImage(sc.character, 0 + frameIndex*32, 225, 32, 32, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
-                break;
-        }
+        // Animate the character
+        const af = ch.animationFrame;
+        ctx.drawImage(af[0], af[1],  af[2], af[3], af[4], af[5], af[6], af[7], af[8]);
         
         // Drawing a non-animated character
         // ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
