@@ -1,25 +1,64 @@
 class character {
 
-    constructor(sc) {
-        this.sc = sc;
-        this.x = 430;
-        this.y = 555;
+    constructor(charId) {
+        this.initialize(charId);
+    }
+
+    async initialize(charId) {
+        await this.getCharacterData(charId);
+        await this.getSpriteSheet(charId);
+
+        this.x = this.data.start.x;
+        this.y = this.data.start.y;
+        this.direction = this.data.direction;
+
         this.way = null;
         this.speed = null;   
         this.size = 1;
-        this.ph = 48;
-        this.pw = 48;
-        this.h = this.ph * this.size;
-        this.w = this.pw * this.size; 
-        this.direction = 0;
 
+        this.maxH = this.data.maxH;
+        this.maxW = this.data.maxW;
+        this.h = this.maxH * this.size;
+        this.w = this.maxW * this.size; 
+        
         this.frameIndex = 0;
-        this.totalFrames = 2;
-        this.ticksPerFrame = 5;
+        this.totalFrames = 0;
+        this.ticksPerFrame = 0;
         this.tickCount = 0;
+
+        // This is a hack because I know that the sprite sheet is the largest asset (right now)
+        // TODO: Make sure the event fires when everything is loaded
+        this.sprite.onload = () => {
+            const doneLoading = new Event("characterloaded");
+            window.dispatchEvent(doneLoading);
+        };
+    }
+
+    async getCharacterData(id) {
+        try {
+            const response = await fetch(`./assets/character${id}/character.json`);
+            this.data = await response.json();
+        } catch(err) {
+            console.log(`Error loading character${id} data.`)
+        } 
+    }
+
+    async getSpriteSheet(id) {
+        try {
+            const url = `./assets/character${id}/sprite.png`;
+            this.sprite = new Image();
+            const response = await fetch(url);
+            const blob = await response.blob();
+            this.sprite.src = await URL.createObjectURL(blob);
+        } catch(err) {
+            console.log(`Error loading character${id} sprite.`);
+        }
     }
 
     update() {
+        this.facing();
+        this.getAnimationInfo();
+
         if (this.way !== null && this.way.length > 0) {
             this.move();        
             this.tickCount += 1;                
@@ -27,27 +66,21 @@ class character {
                 this.tickCount = 0;        	
                 this.frameIndex += 1; 
             }
-            if (this.frameIndex > 2) this.frameIndex = 1;
+            if (this.frameIndex > this.totalFrames - 1) this.frameIndex = 1;
         } else {
             this.frameIndex = 1;
         }
-
-        // Create an array that duplicates the sequence of parameters in ctx.drawImage for sprite animation
-        // TODO: Deal with the magic numbers (create a character manifesto)
-        switch (this.direction) {
-            case 0:
-                this.animationFrame = [this.sc.character, 0 + this.frameIndex*32, 129, 32, 32, this.x-this.w/2, this.y-this.h, this.w, this.h];
-                break;
-            case 1:
-                this.animationFrame = [this.sc.character, 0 + this.frameIndex*32, 161, 32, 32, this.x-this.w/2, this.y-this.h, this.w, this.h];
-                break;
-            case 2:
-                this.animationFrame = [this.sc.character, 0 + this.frameIndex*32, 193, 32, 32, this.x-this.w/2, this.y-this.h, this.w, this.h];
-                break;
-            case 3:
-                this.animationFrame = [this.sc.character, 0 + this.frameIndex*32, 225, 32, 32, this.x-this.w/2, this.y-this.h, this.w, this.h];
-                break;
-        }
+        this.animationFrame = [
+            this.sprite, 
+            this.spriteStartX + this.frameIndex * 32, // This assumes character frames are horizontal
+            this.spriteStartY, 
+            this.frameW, 
+            this.frameH, 
+            this.x-this.w / 2, 
+            this.y-this.h, 
+            this.w, 
+            this.h
+        ];
     }
 
     move() {         
@@ -69,8 +102,6 @@ class character {
         }
 
         if (this.x === destinationX && this.y === destinationY) this.way.shift();
-
-        this.facing();
     }
 
     adjustSpeed(sceneHeight) {
@@ -79,13 +110,12 @@ class character {
 
     adjustSize(sceneHeight) {
         this.size = (this.y / sceneHeight + 1) / 2;
-        this.h = this.ph * this.size;
-        this.w = this.pw * this.size;
+        this.h = this.maxH * this.size;
+        this.w = this.maxW * this.size;
     }
 
     facing() {
-
-        if (this.way[0] !== undefined) {
+        if (this.way !== null && this.way[0] !== undefined) {
             const xDiff = Math.abs(this.way[0].x - this.x);
             const yDiff = Math.abs(this.way[0].y - this.y);
 
@@ -103,6 +133,44 @@ class character {
                 }
             }
         }
+    }
+
+    getAnimationInfo() {
+        switch (this.direction) {
+            case 0:
+                this.totalFrames = this.data.sprite.down.frames;
+                this.ticksPerFrame = this.data.sprite.down.ticks;
+                this.spriteStartX = this.data.sprite.down.sx;
+                this.spriteStartY = this.data.sprite.down.sy;
+                this.frameW = this.data.sprite.down.sw;
+                this.frameH = this.data.sprite.down.sh;
+                break;
+            case 1:
+                this.totalFrames = this.data.sprite.left.frames;
+                this.ticksPerFrame = this.data.sprite.left.ticks;
+                this.spriteStartX = this.data.sprite.left.sx;
+                this.spriteStartY = this.data.sprite.left.sy;
+                this.frameW = this.data.sprite.left.sw;
+                this.frameH = this.data.sprite.left.sh;
+                break;
+            case 2:
+                this.totalFrames = this.data.sprite.right.frames;
+                this.ticksPerFrame = this.data.sprite.right.ticks;
+                this.spriteStartX = this.data.sprite.right.sx;
+                this.spriteStartY = this.data.sprite.right.sy;
+                this.frameW = this.data.sprite.right.sw;
+                this.frameH = this.data.sprite.right.sh;
+                break;
+            case 3:
+                this.totalFrames = this.data.sprite.up.frames;
+                this.ticksPerFrame = this.data.sprite.up.ticks;
+                this.spriteStartX = this.data.sprite.up.sx;
+                this.spriteStartY = this.data.sprite.up.sy;
+                this.frameW = this.data.sprite.up.sw;
+                this.frameH = this.data.sprite.up.sh;
+                break;
+        }
+        
     }
 
     isBehind(x, y, w, h) {

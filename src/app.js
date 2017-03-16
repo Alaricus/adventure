@@ -11,36 +11,50 @@
     
     let mouseData = { x: -1, y: -1 };    
     let sc = new Scene(0);
-    let ch;
+    let chars = [];
+    let player;
     let pf;
+
+    let charactersReady = 0;
+    let allReady = false;
 
     window.addEventListener("sceneloaded", () => {
         canvas.width = sc.data.background.sw;
         canvas.height = sc.data.background.sh;
         pf = new Pathfinding(sc);
-        ch = new Character(sc);
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("debug").style.display = "block";        
+        sc.data.characters.forEach((char, index) => {
+            chars[index] = new Character(char);
+        });
+        player = chars[0];       
+    }, false);
+
+    window.addEventListener("characterloaded", () => {
+        charactersReady++;
+        if (charactersReady === characters.length) {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("debug").style.display = "block";
+            allReady = true;
+        }
     }, false);
 
     canvas.addEventListener("mousemove", (e) => {
         mouseData = getMouseData(canvas, e);
-    }, false); 
+    }, false);
 
-    canvas.addEventListener("click", () => {        
+    canvas.addEventListener("click", () => {      
         // If the area is within bounds and destination isn't the same as origin
         if (pf.accessible(mouseData.x, mouseData.y) 
-            && pf.accessible(ch.x, ch.y) 
-            && !(mouseData.x === ch.x && mouseData.y === ch.y)) {
+            && pf.accessible(player.x, player.y) 
+            && !(mouseData.x === player.x && mouseData.y === player.y)) {
 
             // Add the origin and destination points to the list of path nodes
-            pf.pathNodes.unshift({x: ch.x, y: ch.y});
+            pf.pathNodes.unshift({x: player.x, y: player.y});
             pf.pathNodes.push(mouseData);
 
             // Create a list of all valid A-to-B paths with distance
             pf.buildListOfValidPaths(pf.pathNodes);
 
-            ch.way = pf.buildPath(pf.dijkstra());
+            player.way = pf.buildPath(pf.dijkstra());
 
             // When all done walking, remove the paths and two nodes that were added above
             pf.pathNodes.shift();
@@ -50,7 +64,10 @@
     }, false);
 
     document.getElementById("newScene").addEventListener("click", () => {
-        ch = undefined;
+        charactersReady = 0;
+        allReady = false;
+        player = undefined;
+        chars = [];
         pf = undefined;
         canvas.width = 0;
         canvas.height = 0;
@@ -69,7 +86,7 @@
     };
 
     const main = () => {
-        if (ch !== undefined && pf !== undefined) {
+        if (allReady) {
             update();
             draw();
         }
@@ -82,10 +99,12 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         // TODO: Redo these at some point to not have y-based calculations (try alpha-maps maybe)
-        ch.adjustSize(sc.data.background.sh);
-        ch.adjustSpeed(sc.data.background.sh);
+        player.adjustSize(sc.data.background.sh);
+        player.adjustSpeed(sc.data.background.sh);
         
-        ch.update();
+        chars.forEach((char) => {
+            char.update();
+        });    
     };
 
     const draw = () => {
@@ -100,15 +119,14 @@
             const py = sc.data.foregrounds[index].py;
             const pw = sc.data.foregrounds[index].pw;
             const ph = sc.data.foregrounds[index].ph;
-            if (!ch.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
+            if (!player.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
         });
 
-        // Animate the character
-        const af = ch.animationFrame;
-        ctx.drawImage(af[0], af[1],  af[2], af[3], af[4], af[5], af[6], af[7], af[8]);
-        
-        // Drawing a non-animated character
-        // ctx.drawImage(sc.character, ch.x-ch.w/2, ch.y-ch.h, ch.w, ch.h);
+        // Animate the characters
+        chars.forEach((char) => {
+            const af = char.animationFrame;
+            ctx.drawImage(af[0], af[1],  af[2], af[3], af[4], af[5], af[6], af[7], af[8]);
+        }); 
         
         sc.data.foregrounds.forEach((foreground, index) => {
             const sx = sc.data.foregrounds[index].sx;
@@ -119,7 +137,7 @@
             const py = sc.data.foregrounds[index].py;
             const pw = sc.data.foregrounds[index].pw;
             const ph = sc.data.foregrounds[index].ph;
-            if (ch.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
+            if (player.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
         });
 
         /****************************************/
@@ -157,7 +175,7 @@
 
         // Draw path nodes
         if (document.getElementById("pathNodes").checked) {
-            pf.pathNodes.unshift({x: ch.x, y: ch.y});
+            pf.pathNodes.unshift({x: player.x, y: player.y});
             pf.pathNodes.push(mouseData);
 
             pf.pathNodes.forEach((item) => {
@@ -176,8 +194,8 @@
         // Draw path
         if (document.getElementById("pathLine").checked) {
             if (pf.accessible(mouseData.x, mouseData.y)
-                && pf.accessible(ch.x, ch.y)) {
-                pf.pathNodes.unshift({x: ch.x, y: ch.y});
+                && pf.accessible(player.x, player.y)) {
+                pf.pathNodes.unshift({x: player.x, y: player.y});
                 pf.pathNodes.push(mouseData);
                 pf.buildListOfValidPaths();
                 const travelNodes = pf.buildPath(pf.dijkstra());

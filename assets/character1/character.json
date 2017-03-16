@@ -1,0 +1,14 @@
+{
+    "name": "White Cat",
+    "player": false,
+    "sprite": {
+        "down": {"frames": 3, "ticks": 5, "sx": 0, "sy": 0, "sw": 32, "sh": 32},
+        "left": {"frames": 3, "ticks": 5, "sx": 0, "sy": 32, "sw": 32, "sh": 32},
+        "right": {"frames": 3, "ticks": 5, "sx": 0, "sy": 65, "sw": 32, "sh": 32},
+        "up": {"frames": 3, "ticks": 5, "sx": 0, "sy": 99, "sw": 32, "sh": 32}        
+    },
+    "maxH": 48,
+    "maxW": 48,
+    "start": {"x": 233, "y": 446},
+    "direction": 2
+}

@@ -1,17 +1,12 @@
 class scene {
     
-    constructor(sceneNum) {
-        this.initialize(sceneNum);
+    constructor(sceneId) {
+        this.initialize(sceneId);
     }
 
-    async initialize(sceneNum) {
-        await this.getData(sceneNum);
-
-        await this.data.characters.forEach((char) => {
-            this.getImage(char, null)
-        });
-
-        await this.getImage("sprite", sceneNum);
+    async initialize(sceneId) {
+        await this.getSceneData(sceneId);
+        await this.getSpriteSheet(sceneId);
         
         // This is a hack because I know that the sprite sheet is the largest asset (right now)
         // TODO: Make sure the event fires when everything is loaded
@@ -21,30 +16,24 @@ class scene {
         };
     }
 
-    async getData(num) {
+    async getSceneData(id) {
         try {
-            const response = await fetch(`./assets/scene${num}/scene.json`);
+            const response = await fetch(`./assets/scene${id}/scene.json`);
             this.data = await response.json();
         } catch(err) {
-            console.log(`Error loading scene${num} data.`)
+            console.log(`Error loading scene${id} data.`)
         } 
     }
 
-    async getImage(img, num) {
+    async getSpriteSheet(id) {
         try {
-            let url;
-            if (num !== null) {
-                url = `./assets/scene${num}/${img}.png`;
-            } else {
-                url = `./assets/character${img}/character.png`;
-                img = `character`;
-            }
-            this[img] = new Image();
+            const url = `./assets/scene${id}/sprite.png`;
+            this.sprite = new Image();
             const response = await fetch(url);
             const blob = await response.blob();
-            this[img].src = await URL.createObjectURL(blob);
+            this.sprite.src = await URL.createObjectURL(blob);
         } catch(err) {
-            console.log(`Error loading an asset: ${img} ${num}`);
+            console.log(`Error loading scene${id} sprite.`);
         }
     }
 }

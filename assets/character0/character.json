@@ -1,0 +1,14 @@
+{
+    "name": "Grey Cat",
+    "player": true,
+    "sprite": {
+        "down": {"frames": 3, "ticks": 5, "sx": 0, "sy": 129, "sw": 32, "sh": 32},
+        "left": {"frames": 3, "ticks": 5, "sx": 0, "sy": 161, "sw": 32, "sh": 32},
+        "right": {"frames": 3, "ticks": 5, "sx": 0, "sy": 193, "sw": 32, "sh": 32},
+        "up": {"frames": 3, "ticks": 5, "sx": 0, "sy": 225, "sw": 32, "sh": 32}        
+    },
+    "maxH": 48,
+    "maxW": 48,
+    "start": {"x": 1000, "y": 474},
+    "direction": 1
+}
