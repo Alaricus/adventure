@@ -22,13 +22,13 @@ class pathfinding {
     // Takes polygon array and node objects
     rayCrossings(polygon, start, end) {
         let crossings = 0;
-        for (let i = 0; i < polygon.length; i++) {
+        polygon.forEach((vertex, index) => {
             let j = null;
-            i === polygon.length - 1 ? j = 0 : j = i+1;
-            if (this.segmentsCross(start, end, polygon[i], polygon[j])) {
+            index === polygon.length - 1 ? j = 0 : j = index+1;
+            if (this.segmentsCross(start, end, vertex, polygon[j])) {
                 crossings++;                   
             }
-        }
+        });
         return crossings;
     }
 
@@ -90,8 +90,8 @@ class pathfinding {
         let intersections = 0;
 
         // Find the middle
-        let middleX = node1.x + (node2.x - node1.x) / 2;
-        let middleY = node1.y + (node2.y - node1.y) / 2;
+        const middleX = node1.x + (node2.x - node1.x) / 2;
+        const middleY = node1.y + (node2.y - node1.y) / 2;
 
         // Find if LOS
         if (this.accessible(middleX, middleY) || this.isAnEdge(a, b)) {
@@ -121,7 +121,7 @@ class pathfinding {
             if (index1 !== nodes.length - 1) {
                 nodes.forEach((node2, index2) => {
                     // So long as the valid paths array doesn't already have an inverse pass
-                    let inverseExists = this.validPaths.findIndex((path) => {
+                    const inverseExists = this.validPaths.findIndex((path) => {
                         return path.a === index2 && path.b === index1;
                     });
                     // Check for non-zero distance and LOS then add to the validPaths
@@ -184,7 +184,7 @@ class pathfinding {
                 const edgeLength = edge.d;
                 const edgeStartIndex = edge.a;
                 const edgeEndIndex = edge.b;
-                let distanceEdgeStartToOrigin = data[edgeStartIndex][0];
+                const distanceEdgeStartToOrigin = data[edgeStartIndex][0];
                 const totalDistance = edgeLength + distanceEdgeStartToOrigin;
 
                 if (unvisited.indexOf(edgeEndIndex) !== -1) {

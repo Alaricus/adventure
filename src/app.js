@@ -61,7 +61,7 @@
     });
 
     const getMouseData = (canv, e) => {
-        let rect = canv.getBoundingClientRect();
+        const rect = canv.getBoundingClientRect();
         return {
             x: e.clientX - rect.left,
             y: e.clientY - rect.top
@@ -128,11 +128,11 @@
 
         // Draw foreground image areas
         if (document.getElementById("foreground").checked) {
-            for (let i = 0; i < sc.data.foregrounds.length; i++) {
+            sc.data.foregrounds.forEach((item) => {
                 ctx.strokeStyle = "#ff471a";
-                ctx.strokeRect(sc.data.foregrounds[i].px, sc.data.foregrounds[i].py, sc.data.foregrounds[i].pw, sc.data.foregrounds[i].ph);
+                ctx.strokeRect(item.px, item.py, item.pw, item.ph);
                 ctx.strokeStyle = "#000000";
-            }
+            });
         }
 
         // Draw walkable area

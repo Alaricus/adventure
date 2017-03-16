@@ -56,10 +56,10 @@ class character {
         const destinationX = this.way[0].x;
         const destinationY = this.way[0].y;
         
-        let distX = destinationX - this.x;
-        let distY = destinationY - this.y;
-        let distance = Math.sqrt(distX*distX + distY*distY);
-        let factor = distance / this.speed;
+        const distX = destinationX - this.x;
+        const distY = destinationY - this.y;
+        const distance = Math.sqrt(distX*distX + distY*distY);
+        const factor = distance / this.speed;
         this.x += (distX / factor);
         this.y += (distY / factor);
 
