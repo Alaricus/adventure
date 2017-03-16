@@ -84,7 +84,7 @@ class character {
     }
 
     move() {         
-        // create coordinates to travel to
+        // Create coordinates to travel to
         if (this.way[0] === 0) this.way.shift();
         const destinationX = this.way[0].x;
         const destinationY = this.way[0].y;

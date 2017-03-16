@@ -30,7 +30,7 @@
 
     window.addEventListener("characterloaded", () => {
         charactersReady++;
-        if (charactersReady === characters.length) {
+        if (charactersReady === chars.length) {
             document.getElementById("loading").style.display = "none";
             document.getElementById("debug").style.display = "block";
             allReady = true;
