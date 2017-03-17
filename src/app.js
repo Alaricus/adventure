@@ -92,7 +92,7 @@
         }
         requestAnimationFrame(main);
     };
-    
+
     const update = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);        
         chars.forEach((char) => {
@@ -105,35 +105,31 @@
 
     const draw = () => {
         ctx.drawImage(sc.sprite, sc.data.background.sx, sc.data.background.sy, sc.data.background.sw, sc.data.background.sh, sc.data.background.sx, sc.data.background.sy, sc.data.background.sw, sc.data.background.sh);
-        
-        sc.data.foregrounds.forEach((foreground, index) => {
-            const sx = sc.data.foregrounds[index].sx;
-            const sy = sc.data.foregrounds[index].sy;
-            const sw = sc.data.foregrounds[index].sw;
-            const sh = sc.data.foregrounds[index].sh;
-            const px = sc.data.foregrounds[index].px;
-            const py = sc.data.foregrounds[index].py;
-            const pw = sc.data.foregrounds[index].pw;
-            const ph = sc.data.foregrounds[index].ph;
-            if (!player.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
+
+        let firstOrderForegrounds = [];
+        let secondOrderForegrounds = [];
+
+        sc.data.foregrounds.forEach((fg) => {
+            chars.forEach((char) => {            
+                if (char.isBehind(fg.px, fg.py, fg.pw, fg.ph)) {
+                    if (secondOrderForegrounds.indexOf(fg) === -1) secondOrderForegrounds.push(fg);
+                }
+            });
+            if (secondOrderForegrounds.indexOf(fg) === -1) firstOrderForegrounds.push(fg);
+        });
+
+        firstOrderForegrounds.forEach((fg) => {
+            ctx.drawImage(sc.sprite, fg.sx, fg.sy, fg.sw, fg.sh, fg.px, fg.py, fg.pw, fg.ph);
         });
 
         // Animate the characters
         chars.forEach((char) => {
             const af = char.animationFrame;
             ctx.drawImage(af[0], af[1],  af[2], af[3], af[4], af[5], af[6], af[7], af[8]);
-        }); 
-        
-        sc.data.foregrounds.forEach((foreground, index) => {
-            const sx = sc.data.foregrounds[index].sx;
-            const sy = sc.data.foregrounds[index].sy;
-            const sw = sc.data.foregrounds[index].sw;
-            const sh = sc.data.foregrounds[index].sh;
-            const px = sc.data.foregrounds[index].px;
-            const py = sc.data.foregrounds[index].py;
-            const pw = sc.data.foregrounds[index].pw;
-            const ph = sc.data.foregrounds[index].ph;
-            if (player.isBehind(px, py, pw, ph)) ctx.drawImage(sc.sprite, sx, sy, sw, sh, px, py, pw, ph);
+        });
+
+        secondOrderForegrounds.forEach((fg) => {
+            ctx.drawImage(sc.sprite, fg.sx, fg.sy, fg.sw, fg.sh, fg.px, fg.py, fg.pw, fg.ph);
         });
 
         /****************************************/

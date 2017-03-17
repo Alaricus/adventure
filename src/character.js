@@ -15,6 +15,7 @@ class character {
             this.anims[anim] = new Animation(this.data.animations[anim]);
         }
 
+        // TODO: This should probably be per scene, not per character
         this.x = this.data.start.x;
         this.y = this.data.start.y;
         this.direction = this.data.direction;
@@ -119,13 +120,13 @@ class character {
             const xDiff = Math.abs(this.way[0].x - this.x);
             const yDiff = Math.abs(this.way[0].y - this.y);
 
-            if (xDiff >= yDiff) { // horizontal
+            if (xDiff >= yDiff) {
                 if (this.way[0].x - this.x <= 0) { 
                     return "left";
                 } else {
                     return "right";
                 }
-            } else { // vertical
+            } else {
                 if (this.way[0].y - this.y <= 0) { 
                     return "up";
                 } else {
