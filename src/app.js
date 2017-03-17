@@ -92,17 +92,13 @@
         }
         requestAnimationFrame(main);
     };
-
-
-
+    
     const update = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // TODO: Redo these at some point to not have y-based calculations (try alpha-maps maybe)
-        player.adjustSize(sc.data.background.sh);
-        player.adjustSpeed(sc.data.background.sh);
-        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);        
         chars.forEach((char) => {
+            // TODO: Redo these at some point to not have y-based calculations (try alpha-maps maybe)
+            char.adjustSize(sc.data.background.sh);
+            char.adjustSpeed(sc.data.background.sh);
             char.update();
         });    
     };
