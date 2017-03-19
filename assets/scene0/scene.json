@@ -8,7 +8,14 @@
         {"frames": 1, "px": 670, "py": 120, "pw": 356, "ph": 411, "sx": 572, "sy": 577, "sw": 356, "sh": 411},
         {"frames": 1, "px": 115, "py": 280, "pw": 129, "ph": 79, "sx": 0, "sy": 687, "sw": 129, "sh": 79}
     ],
-    "characters": [0, 1],
+    "characters": [
+        {"id": 0, "start": {"x": 1043, "y": 474}, "direction": "left"},
+        {"id": 1, "start": {"x": 380, "y": 600}, "direction": "right"}
+    ],
+    "scripts": [
+        {"finite": true, "type": "timed", "subject": "char-0", "action": "move", "destination": [{"x": 1000, "y": 474}]},
+        {"finite": true, "type": "timed", "subject": "char-1", "action": "move", "destination": [{"x": 580, "y": 500}, {"x": 580, "y": 305}, {"x": 470, "y": 305}]}
+    ],
     "walkableAreas": {
         "canvas": {"w": 1024, "h": 576},
         "polygons": [

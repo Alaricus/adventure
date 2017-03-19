@@ -8,7 +8,5 @@
         "up": {"frames": 3, "ticks": 5, "idle": 2, "sx": 0, "sy": 225, "sw": 32, "sh": 32}        
     },
     "maxH": 48,
-    "maxW": 48,
-    "start": {"x": 1000, "y": 474},
-    "direction": "left"
+    "maxW": 48
 }

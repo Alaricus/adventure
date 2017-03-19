@@ -1,12 +1,16 @@
+"use strict";
+
 const Animation = require("./animation");
 
 class character {
 
-    constructor(charId) {
-        this.initialize(charId);
+    constructor(charInfo) {
+        this.initialize(charInfo);
     }
 
-    async initialize(charId) {
+    async initialize(charInfo) {
+        const charId = charInfo.id;
+
         await this.getCharacterData(charId);
         await this.getSpriteSheet(charId);
 
@@ -15,10 +19,9 @@ class character {
             this.anims[anim] = new Animation(this.data.animations[anim]);
         }
 
-        // TODO: This should probably be per scene, not per character
-        this.x = this.data.start.x;
-        this.y = this.data.start.y;
-        this.direction = this.data.direction;
+        this.x = charInfo.start.x;
+        this.y = charInfo.start.y;
+        this.direction = charInfo.direction;
 
         this.way = null;
         this.speed = null;   

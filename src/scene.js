@@ -1,3 +1,5 @@
+"use strict";
+
 class scene {
     
     constructor(sceneId) {
@@ -35,6 +37,20 @@ class scene {
         } catch(err) {
             console.log(`Error loading scene${id} sprite.`);
         }
+    }
+
+    runScripts(chars) {
+        // TODO: Need to process each script individually and create a script object
+        this.data.scripts.forEach((script) => {
+            if (script.finite) {
+                if (script.subject.startsWith("char")) {
+                    const charId = script.subject.charAt(5);
+                    if (script.action === "move") {
+                        chars[charId].way = script.destination;
+                    }
+                }
+            }
+        });
     }
 }
 

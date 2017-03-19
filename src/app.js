@@ -25,7 +25,7 @@
         sc.data.characters.forEach((char, index) => {
             chars[index] = new Character(char);
         });
-        player = chars[0];       
+        player = chars[0];    
     }, false);
 
     window.addEventListener("characterloaded", () => {
@@ -34,6 +34,7 @@
             document.getElementById("loading").style.display = "none";
             document.getElementById("debug").style.display = "block";
             allReady = true;
+            sc.runScripts(chars); 
         }
     }, false);
 

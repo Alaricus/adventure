@@ -1,3 +1,5 @@
+"use strict";
+
 class animation {
     
     constructor(animData) {
