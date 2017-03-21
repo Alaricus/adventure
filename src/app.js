@@ -27,6 +27,7 @@
         sc.data.characters.forEach((char, index) => {
             chars[index] = new Character(char);
         });
+        player = chars[0];
         sc.data.actions.forEach((action, index) => {
             actions[index] = new Action(action, sc, chars);
         });  
