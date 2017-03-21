@@ -11,8 +11,8 @@
     "characters": [
         {"id": 0, "start": {"x": 1043, "y": 474}, "direction": "left"}
     ],
-    "scripts": [
-        {"finite": true, "type": "timed", "subject": "char-0", "action": "move", "destination": [{"x": 1000, "y": 474}]}
+    "actions": [
+        {"finite": true, "trigger": "time", "subject": "char-0", "type": "move", "destination": [{"x": 1000, "y": 474}]}
     ],
     "walkableAreas": {
         "canvas": {"w": 1024, "h": 576},

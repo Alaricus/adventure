@@ -5,6 +5,7 @@
     const Scene = require("./scene");
     const Pathfinding = require("./pathfinding");
     const Character = require("./character");
+    const Action = require("./action");
 
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
@@ -12,6 +13,7 @@
     let mouseData = { x: -1, y: -1 };    
     let sc = new Scene(0);
     let chars = [];
+    let actions = [];
     let player;
     let pf;
 
@@ -25,7 +27,9 @@
         sc.data.characters.forEach((char, index) => {
             chars[index] = new Character(char);
         });
-        player = chars[0];    
+        sc.data.actions.forEach((action, index) => {
+            actions[index] = new Action(action, sc, chars);
+        });  
     }, false);
 
     window.addEventListener("characterloaded", () => {
@@ -34,7 +38,7 @@
             document.getElementById("loading").style.display = "none";
             document.getElementById("debug").style.display = "block";
             allReady = true;
-            sc.runScripts(chars); 
+            // sc.runActions(chars); 
         }
     }, false);
 
@@ -95,13 +99,16 @@
     };
 
     const update = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        actions.forEach((action) => {
+            action.execute();
+        });   
         chars.forEach((char) => {
             // TODO: Redo these at some point to not have y-based calculations (try alpha-maps maybe)
             char.adjustSize(sc.data.background.sh);
             char.adjustSpeed(sc.data.background.sh);
             char.update();
-        });    
+        }); 
     };
 
     const draw = () => {
