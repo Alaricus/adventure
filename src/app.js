@@ -25,7 +25,7 @@
         canvas.height = sc.data.background.sh;
         pf = new Pathfinding(sc);
         sc.data.characters.forEach((char, index) => {
-            chars[index] = new Character(char);
+            chars[index] = new Character(index, sc, pf);
         });
         player = chars[0];
         sc.data.actions.forEach((action, index) => {
@@ -39,7 +39,6 @@
             document.getElementById("loading").style.display = "none";
             document.getElementById("debug").style.display = "block";
             allReady = true;
-            // sc.runActions(chars); 
         }
     }, false);
 
@@ -69,7 +68,7 @@
         }
     }, false);
 
-    document.getElementById("newScene").addEventListener("click", () => {
+    window.addEventListener("exitscene", () => {
         charactersReady = 0;
         allReady = false;
         player = undefined;
@@ -105,11 +104,8 @@
             action.execute();
         });   
         chars.forEach((char) => {
-            // TODO: Redo these at some point to not have y-based calculations (try alpha-maps maybe)
-            char.adjustSize(sc.data.background.sh);
-            char.adjustSpeed(sc.data.background.sh);
             char.update();
-        }); 
+        });
     };
 
     const draw = () => {
@@ -217,6 +213,10 @@
                 pf.validPaths = [];
             }
         }
+        
+        // TODO: this shouldn't be here, but so far it's the only place where the event is not 
+        // firing from inside some function that retains the values which are reset by the event handler
+        if (player.way.length === 0) {player.isInExitArea();}
     };
 
     main();

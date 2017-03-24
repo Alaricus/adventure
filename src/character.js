@@ -4,24 +4,26 @@ const Animation = require("./animation");
 
 class character {
 
-    constructor(charInfo) {
-        this.initialize(charInfo);
+    constructor(id, sc, pf) {
+        this.id = id;
+        this.sc = sc;
+        this.pf = pf;
+        this.charInfo = sc.data.characters[id]; 
+        this.initialize();
     }
 
-    async initialize(charInfo) {
-        const charId = charInfo.id;
-
-        await this.getCharacterData(charId);
-        await this.getSpriteSheet(charId);
+    async initialize() {
+        await this.getCharacterData();
+        await this.getSpriteSheet();
 
         this.anims = {};
         for (let anim in this.data.animations) {
             this.anims[anim] = new Animation(this.data.animations[anim]);
         }
 
-        this.x = charInfo.start.x;
-        this.y = charInfo.start.y;
-        this.direction = charInfo.direction;
+        this.x = this.charInfo.start.x;
+        this.y = this.charInfo.start.y;
+        this.direction = this.charInfo.direction;
 
         this.way = null;
         this.speed = null;   
@@ -40,35 +42,39 @@ class character {
         };
     }
 
-    async getCharacterData(id) {
+    async getCharacterData() {
         try {
-            const response = await fetch(`./assets/character${id}/character.json`);
+            const response = await fetch(`./assets/character${this.id}/character.json`);
             this.data = await response.json();
         } catch(err) {
-            console.log(`Error loading character${id} data.`)
+            console.log(`Error loading character${this.id} data.`)
         } 
     }
 
-    async getSpriteSheet(id) {
+    async getSpriteSheet() {
         try {
-            const url = `./assets/character${id}/sprite.png`;
+            const url = `./assets/character${this.id}/sprite.png`;
             this.sprite = new Image();
             const response = await fetch(url);
             const blob = await response.blob();
             this.sprite.src = await URL.createObjectURL(blob);
         } catch(err) {
-            console.log(`Error loading character${id} sprite.`);
+            console.log(`Error loading character${this.id} sprite.`);
         }
     }
 
     update() {
+        // TODO: Redo these at some point to not have y-based calculations (try alpha-maps maybe)
+        this.adjustSize(this.sc.data.background.sh);
+        this.adjustSpeed(this.sc.data.background.sh);
+
         if (this.facing() !== undefined) this.direction = this.facing();
         if (this.way !== null && this.way.length > 0) {
             this.move();
             this.anims[this.direction].nextTick();
-        } else {
+        } else {           
             this.anims[this.direction].returnToIdle();
-        }        
+        }      
         this.createCompleteFrame();
     }
 
@@ -143,6 +149,18 @@ class character {
             return true;
         }
         return false;
+    }
+
+    isInExitArea() {
+        this.sc.data.exitAreas.forEach((area) => {
+            const crossings = this.pf.rayCrossings(area, {x: -1, y: -1}, {x: this.x, y: this.y})
+            if (crossings % 2 === 1) {
+                // TODO: add a check from which scene to exit to, and pass it with the event
+                // also need the exit location to adjust the entrance locatoion
+                const exitScene = new Event("exitscene");
+                window.dispatchEvent(exitScene);
+            }
+        });
     }
 }
 
