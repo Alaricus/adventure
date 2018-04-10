@@ -1,4 +1,5 @@
 "use strict";
+
 import Scene from "./scene.js";
 import Pathfinding from "./pathfinding.js";
 import Character from "./character.js";
