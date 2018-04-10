@@ -1,14 +1,14 @@
 "use strict";
 
-const Animation = require("./animation");
+import Animation from "./animation.js";
 
-class character {
+export default class Character {
 
     constructor(id, sc, pf) {
         this.id = id;
         this.sc = sc;
         this.pf = pf;
-        this.charInfo = sc.data.characters[id]; 
+        this.charInfo = sc.data.characters[id];
         this.initialize();
     }
 
@@ -26,13 +26,13 @@ class character {
         this.direction = this.charInfo.direction;
 
         this.way = null;
-        this.speed = null;   
+        this.speed = null;
         this.size = 1;
 
         this.maxH = this.data.maxH;
         this.maxW = this.data.maxW;
         this.h = this.maxH * this.size;
-        this.w = this.maxW * this.size; 
+        this.w = this.maxW * this.size;
 
         // This is a hack because I know that the sprite sheet is the largest asset (right now)
         // TODO: Make sure the event fires when everything is loaded
@@ -48,7 +48,7 @@ class character {
             this.data = await response.json();
         } catch(err) {
             console.log(`Error loading character${this.id} data.`)
-        } 
+        }
     }
 
     async getSpriteSheet() {
@@ -72,32 +72,32 @@ class character {
         if (this.way !== null && this.way.length > 0) {
             this.move();
             this.anims[this.direction].nextTick();
-        } else {           
+        } else {
             this.anims[this.direction].returnToIdle();
-        }      
+        }
         this.createCompleteFrame();
     }
 
     createCompleteFrame() {
         const animInfo = this.anims[this.direction].frame;
         this.animationFrame = [
-            this.sprite, 
-            animInfo[0], 
-            animInfo[1], 
-            animInfo[2], 
+            this.sprite,
+            animInfo[0],
+            animInfo[1],
+            animInfo[2],
             animInfo[3],
-            this.x-this.w / 2, 
-            this.y-this.h, 
-            this.w, 
+            this.x-this.w / 2,
+            this.y-this.h,
+            this.w,
             this.h
         ];
     }
 
-    move() {         
+    move() {
         if (this.way[0] === 0) this.way.shift();
         const destinationX = this.way[0].x;
         const destinationY = this.way[0].y;
-        
+
         const distX = destinationX - this.x;
         const distY = destinationY - this.y;
         const distance = Math.sqrt(distX*distX + distY*distY);
@@ -129,13 +129,13 @@ class character {
             const yDiff = Math.abs(this.way[0].y - this.y);
 
             if (xDiff >= yDiff) {
-                if (this.way[0].x - this.x <= 0) { 
+                if (this.way[0].x - this.x <= 0) {
                     return "left";
                 } else {
                     return "right";
                 }
             } else {
-                if (this.way[0].y - this.y <= 0) { 
+                if (this.way[0].y - this.y <= 0) {
                     return "up";
                 } else {
                     return "down";
@@ -163,5 +163,3 @@ class character {
         });
     }
 }
-
-module.exports = character;

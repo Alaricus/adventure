@@ -1,6 +1,6 @@
 "use strict";
 
-class action {
+export default class Action {
 
     // {"finite": true, "trigger": "time", "subject": "char-0", "type": "move", "destination": [{"x": 1000, "y": 474}]},
 
@@ -8,7 +8,7 @@ class action {
         this.info = actionInfo;
         this.timesRan = 0;
         this.setSubject(sc, chars);
-        this.build();    
+        this.build();
     }
 
     setSubject(sc, chars) {
@@ -33,5 +33,3 @@ class action {
         }
     }
 }
-
-module.exports = action;

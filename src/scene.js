@@ -1,7 +1,7 @@
 "use strict";
 
-class scene {
-    
+export default class Scene {
+
     constructor(sceneId) {
         this.initialize(sceneId);
     }
@@ -9,7 +9,7 @@ class scene {
     async initialize(sceneId) {
         await this.getSceneData(sceneId);
         await this.getSpriteSheet(sceneId);
-        
+
         // This is a hack because I know that the sprite sheet is the largest asset (right now)
         // TODO: Make sure the event fires when everything is loaded
         this.sprite.onload = () => {
@@ -24,7 +24,7 @@ class scene {
             this.data = await response.json();
         } catch(err) {
             console.log(`Error loading scene${id} data.`)
-        } 
+        }
     }
 
     async getSpriteSheet(id) {
@@ -53,5 +53,3 @@ class scene {
     //     });
     // }
 }
-
-module.exports = scene;

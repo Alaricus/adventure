@@ -1,7 +1,7 @@
 "use strict";
 
-class pathfinding {
-    
+export default class Pathfinding {
+
     constructor(scene) {
         this.pathNodes = [];
         this.validPaths = [];
@@ -11,13 +11,13 @@ class pathfinding {
 
     // Takes four node objects where A and B are segment 1 and C and D are segment 2
     segmentsCross(A, B, C, D) {
-        const crossProductABCD = ((B.x - A.x) * (D.y - C.y)) - ((B.y - A.y) * (D.x - C.x));            
-        if (crossProductABCD == 0) return false;        
-        const crossProductACDC = ((A.y - C.y) * (D.x - C.x)) - ((A.x - C.x) * (D.y - C.y)); 
-        const crossProductABAC = ((A.y - C.y) * (B.x - A.x)) - ((A.x - C.x) * (B.y - A.y));            
-        if (crossProductACDC == 0 || crossProductABAC == 0) return false;            
+        const crossProductABCD = ((B.x - A.x) * (D.y - C.y)) - ((B.y - A.y) * (D.x - C.x));
+        if (crossProductABCD == 0) return false;
+        const crossProductACDC = ((A.y - C.y) * (D.x - C.x)) - ((A.x - C.x) * (D.y - C.y));
+        const crossProductABAC = ((A.y - C.y) * (B.x - A.x)) - ((A.x - C.x) * (B.y - A.y));
+        if (crossProductACDC == 0 || crossProductABAC == 0) return false;
         const test1 = crossProductACDC / crossProductABCD;
-        const test2 = crossProductABAC / crossProductABCD;            
+        const test2 = crossProductABAC / crossProductABCD;
         return (test1 > 0 && test1 < 1) && (test2 > 0 && test2 < 1);
     }
 
@@ -28,7 +28,7 @@ class pathfinding {
             let j = null;
             index === polygon.length - 1 ? j = 0 : j = index+1;
             if (this.segmentsCross(start, end, vertex, polygon[j])) {
-                crossings++;                   
+                crossings++;
             }
         });
         return crossings;
@@ -103,7 +103,7 @@ class pathfinding {
         } else {
             return false;
         }
-        
+
         return intersections === 0 ? true : false;
     }
 
@@ -147,7 +147,7 @@ class pathfinding {
             const distX = node1.x - node2.x;
             const distY = node1.y - node2.y;
             return Math.sqrt(distX*distX + distY*distY);
-        }    
+        }
     }
 
     // Dijkstra's algorithm. Not Sigismund Dijkstra
@@ -155,7 +155,7 @@ class pathfinding {
         const nodes = this.pathNodes; // array of nodes: {x: 4, y: 8}
         const edges = this.validPaths; // array of edges: {a: 0, b: 1, d: 428}
 
-        // Make an "unvisited" array store a list of all nodes' indexes         
+        // Make an "unvisited" array store a list of all nodes' indexes
         let unvisited = [];
         nodes.forEach((item, index) => { unvisited[index] = index; });
 
@@ -205,14 +205,14 @@ class pathfinding {
             let test = { id: null, dist: null };
 
             data.forEach((item, index) => {
-                if (unvisited.indexOf(index) !== -1 && (test.dist === null || item[0] < test.dist )) { 
+                if (unvisited.indexOf(index) !== -1 && (test.dist === null || item[0] < test.dist )) {
                     test = { id: index, dist: item[0] };
                 }
             });
 
             currentNode = test.id;
         }
-        
+
         return data;
     }
 
@@ -230,5 +230,3 @@ class pathfinding {
     }
 
 }
-
-module.exports = pathfinding;

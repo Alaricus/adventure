@@ -1,7 +1,7 @@
 "use strict";
 
-class animation {
-    
+export default class Animation {
+
     constructor(animData) {
         this.totalFrames = animData.frames;
         this.ticksPerFrame = animData.ticks;
@@ -13,11 +13,11 @@ class animation {
         this.returnToIdle();
     }
 
-    nextTick() {                   
-        this.tickCount += 1;                
-        if (this.tickCount > this.ticksPerFrame) {        
-            this.tickCount = 0;        	
-            this.frameIndex += 1; 
+    nextTick() {
+        this.tickCount += 1;
+        if (this.tickCount > this.ticksPerFrame) {
+            this.tickCount = 0;
+            this.frameIndex += 1;
         }
         if (this.frameIndex > this.totalFrames - 1) this.frameIndex = 1;
 
@@ -28,9 +28,9 @@ class animation {
     {
         this.frame = [
             this.spriteStartX + this.frameIndex * this.frameW, // This assumes character frames are horizontal
-            this.spriteStartY, 
-            this.frameW, 
-            this.frameH, 
+            this.spriteStartY,
+            this.frameW,
+            this.frameH,
         ];
     }
 
@@ -40,5 +40,3 @@ class animation {
         this.createFrame();
     }
 }
-
-module.exports = animation;

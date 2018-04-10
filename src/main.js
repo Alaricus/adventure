@@ -1,16 +1,14 @@
 "use strict";
+import Scene from "./scene.js";
+import Pathfinding from "./pathfinding.js";
+import Character from "./character.js";
+import Action from "./action.js";
 
 (function () {
-
-    const Scene = require("./scene");
-    const Pathfinding = require("./pathfinding");
-    const Character = require("./character");
-    const Action = require("./action");
-
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
-    
-    let mouseData = { x: -1, y: -1 };    
+
+    let mouseData = { x: -1, y: -1 };
     let sc = new Scene(0);
     let chars = [];
     let actions = [];
@@ -30,7 +28,7 @@
         player = chars[0];
         sc.data.actions.forEach((action, index) => {
             actions[index] = new Action(action, sc, chars);
-        });  
+        });
     }, false);
 
     window.addEventListener("characterloaded", () => {
@@ -46,10 +44,10 @@
         mouseData = getMouseData(canvas, e);
     }, false);
 
-    canvas.addEventListener("click", () => {      
+    canvas.addEventListener("click", () => {
         // If the area is within bounds and destination isn't the same as origin
-        if (pf.accessible(mouseData.x, mouseData.y) 
-            && pf.accessible(player.x, player.y) 
+        if (pf.accessible(mouseData.x, mouseData.y)
+            && pf.accessible(player.x, player.y)
             && !(mouseData.x === player.x && mouseData.y === player.y)) {
 
             // Add the origin and destination points to the list of path nodes
@@ -102,7 +100,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         actions.forEach((action) => {
             action.execute();
-        });   
+        });
         chars.forEach((char) => {
             char.update();
         });
@@ -115,7 +113,7 @@
         let secondOrderForegrounds = [];
 
         sc.data.foregrounds.forEach((fg) => {
-            chars.forEach((char) => {            
+            chars.forEach((char) => {
                 if (char.isBehind(fg.px, fg.py, fg.pw, fg.ph)) {
                     if (secondOrderForegrounds.indexOf(fg) === -1) secondOrderForegrounds.push(fg);
                 }
@@ -166,7 +164,7 @@
                     ctx.lineTo(polygon[i].x, polygon[i].y);
                     ctx.stroke();
                     ctx.strokeStyle = "#000000";
-                });                    
+                });
             });
         }
 
@@ -213,8 +211,8 @@
                 pf.validPaths = [];
             }
         }
-        
-        // TODO: this shouldn't be here, but so far it's the only place where the event is not 
+
+        // TODO: this shouldn't be here, but so far it's the only place where the event is not
         // firing from inside some function that retains the values which are reset by the event handler
         if (player.way.length === 0) {player.isInExitArea();}
     };
